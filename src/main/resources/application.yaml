@@ -1,3 +1,6 @@
 spring:
   application:
     name: spring-lib-prcte
+  docker:
+    compose:
+      enabled: false
