@@ -3,6 +3,7 @@ package com.spring.spring_lib_prcte.service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -77,5 +78,39 @@ public class EmployeeService {
         employeePartition.forEach((booleanValue, empList) -> {
             empList.forEach(emp -> System.out.println("key: " + booleanValue + ", value: " + emp.getSalary()));
         });
+    }
+
+    public void getCommaSeparatedStringOfAllEmployeeNamesSortedAlphabetically() {
+        System.out.println("Comma Separated String of all employee names sorted alphabetically");
+        String result = employeeInMemoryDB.getAllEmployees().stream().map(Employee::getName).sorted()
+                .collect(Collectors.joining(","));
+        System.out.println(result);
+        System.out.println("----------------------------------");
+    }
+
+    public void findDuplicateEmployeeNames() {
+        System.out.println("Find Duplicate Employee Names");
+        Map<String, Long> duplicateEmployees = employeeInMemoryDB.getAllEmployees().stream()
+                .collect(Collectors.groupingBy(Employee::getName, Collectors.counting()));
+
+        duplicateEmployees.forEach((key, value) -> {
+            if (value > 1)
+                System.out.println("Employee " + key + " has duplicate entries with count: " + value);
+        });
+
+        System.out.println("----------------------------------");
+    }
+
+    public void findTheDepartmentWithTheHighestTotalSalary() {
+        System.out.println("Find The Department With The Highest Total Salary");
+        Map<String, Double> totalSalaryByDepartment = employeeInMemoryDB.getAllEmployees().stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.summingDouble(Employee::getSalary)));
+
+        Optional<String> deptWithHighestSalary = totalSalaryByDepartment.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey);
+
+        System.out.println("Depart with highest Salary is: " + deptWithHighestSalary.get());
+        System.out.println("----------------------------------");
     }
 }

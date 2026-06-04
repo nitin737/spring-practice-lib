@@ -13,9 +13,9 @@ Use the project `Employee` model and service layer to practice solving these wit
 - [x] 3. Find the second-highest salary among all employees.
 - [x] 4. Find the second-highest-paid employee in each department.
 - [x] 5. Partition employees into two groups: salary greater than `50000` and salary less than or equal to `50000`.
-- [ ] 6. Get a comma-separated string of all employee names sorted alphabetically.
-- [ ] 7. Find duplicate employee names from a list of employees.
-- [ ] 8. Find the department with the highest total salary.
+- [x] 6. Get a comma-separated string of all employee names sorted alphabetically.
+- [x] 7. Find duplicate employee names from a list of employees.
+- [x] 8. Find the department with the highest total salary.
 - [ ] 9. Count how many employees have each skill.
 - [ ] 10. Flatten all employee skills into a unique sorted list.
 - [ ] 11. Find employees who have more than 3 skills.
