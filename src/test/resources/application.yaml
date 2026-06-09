@@ -1,0 +1,25 @@
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: spring-lib-prcte-test
+  docker:
+    compose:
+      enabled: false
+  ai:
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        collection-name: test-collection
+        use-tls: false
+        initialize-schema: false
+    google:
+      genai:
+        embedding: 
+          api-key: ${GEMINI_API_KEY:dummy-api-key}
+          project-id: ${GOOGLE_CLOUD_PROJECT:dummy-project}
+          location: ${GOOGLE_CLOUD_LOCATION:us-central1}
+          text:
+            options:
+              model: text-embedding-004
