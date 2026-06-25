@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: sprlibprc
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount the locally built jar into the container
+      - ./build/libs:/app/libs
+    environment:
+      - SPRING_AI_VECTORSTORE_QDRANT_HOST=qdrant
+      - SPRING_AI_VECTORSTORE_QDRANT_PORT=6334
+      - GEMINI_API_KEY
+      - GOOGLE_CLOUD_PROJECT
+      - GOOGLE_CLOUD_LOCATION
+    depends_on:
+      qdrant:
+        condition: service_healthy

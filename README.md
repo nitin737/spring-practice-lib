@@ -20,8 +20,11 @@ The application utilizes Qdrant to store high-dimensional document vectors gener
 
 - `src/main/java/com/spring/spring_lib_prcte/SpringLibPrcteApplication.java`: The entry point that implements `CommandLineRunner` to insert sample documents into Qdrant and perform similarity search.
 - `src/main/resources/application.yaml`: Configuration file for Spring Boot, Docker Compose, Qdrant, and Google GenAI.
-- `compose.yaml`: Configures the Qdrant service and the application container.
-- `Dockerfile`: Multi-stage build for compiling and packaging the Spring Boot application jar.
+- `compose.yaml`: Configures the Qdrant service and the application container (production).
+- `compose.dev.yaml`: Dev override — mounts the locally-built JAR instead of building inside Docker.
+- `Dockerfile`: Multi-stage build for compiling and packaging the Spring Boot application jar (production).
+- `Dockerfile.dev`: Lightweight image for development — runs a pre-built JAR mounted from the host.
+- `auto/dev-start.ps1`: PowerShell script to build the JAR and start the dev Docker stack in one command.
 - `.env.example`: Template for required environment variables.
 
 ---
@@ -48,8 +51,8 @@ GOOGLE_CLOUD_PROJECT=your_google_cloud_project_id
 GOOGLE_CLOUD_LOCATION=global
 ```
 
-### 2. Running the Whole Stack (Docker Compose)
-You can run the vector database and the application together using Docker Compose:
+### 2. Production — Full Docker Build
+Builds the JAR inside Docker and starts both services:
 ```bash
 docker compose up --build
 ```
@@ -59,7 +62,47 @@ This command:
 3. Automatically supplies the environment variables defined in `.env` to the container.
 4. Starts the application, which waits until Qdrant is healthy.
 
-### 3. Local Development (Running App via Gradle)
+### 3. Development — Fast Iteration Workflow
+
+Use the dev setup to avoid a full Docker rebuild on every code change. Changes are reflected by
+building the JAR locally (~5–10s) and restarting only the app container (~3s).
+
+#### Option A — One command (PowerShell script)
+```powershell
+.\auto\dev-start.ps1
+```
+This script:
+1. Builds the JAR locally via Gradle (skipping tests).
+2. Ensures Qdrant is up and healthy.
+3. Restarts the Spring Boot app container using the mounted JAR.
+
+> **First-time only**: If PowerShell blocks the script, run once:
+> ```powershell
+> Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+> ```
+
+#### Option B — Manual steps
+```powershell
+# Step 1: Build the JAR locally
+.\gradlew bootJar -x test
+
+# Step 2: Restart the app container (no Docker rebuild needed)
+docker-compose -f compose.yaml -f compose.dev.yaml up app --force-recreate -d
+```
+
+#### Useful Dev Commands
+```powershell
+# Follow live application logs
+docker logs sprlibprc -f
+
+# Stop all containers
+docker-compose -f compose.yaml -f compose.dev.yaml down
+
+# Stop all and remove volumes
+docker-compose -f compose.yaml -f compose.dev.yaml down -v
+```
+
+### 4. Local Development (Running App via Gradle)
 If you want to run the application locally (e.g., in your IDE or terminal) and only run Qdrant in Docker:
 
 1. **Start Qdrant container**:

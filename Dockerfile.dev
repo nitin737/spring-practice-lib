@@ -1,0 +1,8 @@
+# Dev Dockerfile - expects JAR to be built locally and mounted via volume
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+EXPOSE 8080
+
+# The jar will be mounted at /app/libs/ from the host via compose.dev.yaml volume
+ENTRYPOINT ["sh", "-c", "java -jar $(ls /app/libs/*.jar | grep -v plain)"]

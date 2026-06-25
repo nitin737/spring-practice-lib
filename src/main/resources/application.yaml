@@ -10,13 +10,13 @@ spring:
     model:
       embedding:
         text: google-genai
-    vectorstore:
-      qdrant:
-        host: localhost
-        port: 6334
-        collection-name: spring-collection
-        use-tls: false
-        initialize-schema: true
+    # vectorstore:
+    #   qdrant:
+    #     host: localhost
+    #     port: 6334
+    #     collection-name: spring-collection
+    #     use-tls: false
+    #     initialize-schema: true
     google:
       genai:
         embedding:
@@ -26,4 +26,5 @@ spring:
           text:
             options:
               model: gemini-embedding-001
-              dimensions: 768
+              dimensions: 3072
+              task-type: RETRIEVAL_DOCUMENT
